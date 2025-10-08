@@ -1,0 +1,128 @@
+.block-node {
+  width: 260px;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e4e7f1;
+  box-shadow: 0 20px 35px -25px rgba(13, 19, 33, 0.4);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.block-node--selected {
+  border-color: #6b5bff;
+  box-shadow: 0 24px 45px -30px rgba(107, 91, 255, 0.6);
+}
+
+.block-node__handle {
+  width: 12px;
+  height: 12px;
+  background: #6b5bff;
+  border: 2px solid #ffffff;
+}
+
+.block-node__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.block-node__badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.block-node__badge img {
+  width: 100%;
+  height: auto;
+}
+
+.block-node__heading h2 {
+  font-size: 16px;
+  margin: 0;
+  color: #0d1321;
+}
+
+.block-node__heading p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #5f6c94;
+}
+
+.block-node__status {
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #f0f2fb;
+  color: #4f5b7b;
+}
+
+.block-node__status--running {
+  background: #e2e8ff;
+  color: #3b45a4;
+}
+
+.block-node__status--success {
+  background: #ddf7e4;
+  color: #257a47;
+}
+
+.block-node__config {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.block-node__config-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  background: #f7f8ff;
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.block-node__config-row dt {
+  font-size: 12px;
+  color: #7b86a8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.block-node__config-row dd {
+  margin: 0;
+  font-size: 14px;
+  color: #1d2746;
+  font-weight: 600;
+}
+
+.block-node__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.block-node__delete {
+  background: none;
+  border: none;
+  color: #b4232b;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.block-node__delete:hover {
+  text-decoration: underline;
+}

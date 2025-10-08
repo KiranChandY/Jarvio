@@ -1,0 +1,112 @@
+.flow-shell {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px 36px;
+}
+
+.flow-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 24px 28px;
+  border: 1px solid #e1e6f2;
+}
+
+.flow-toolbar__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.flow-toolbar__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d1321;
+}
+
+.flow-toolbar__subtitle {
+  margin: 0;
+  color: #596891;
+}
+
+.flow-toolbar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.flow-toolbar__button {
+  border: 1px solid #d4d9eb;
+  background: #f8f9ff;
+  color: #1d2746;
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.flow-toolbar__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.flow-toolbar__button:hover:not(:disabled) {
+  background: #eef1ff;
+  border-color: #c2c8ef;
+}
+
+.flow-toolbar__button--primary {
+  background: linear-gradient(135deg, #6b5bff, #8c79ff);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 14px 30px -18px rgba(107, 91, 255, 0.9);
+}
+
+.flow-toolbar__button--primary:hover {
+  background: linear-gradient(135deg, #5e4cf3, #7865ff);
+}
+
+.flow-toolbar__icon {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: #ffffff;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(13, 19, 33, 0.05);
+}
+
+.flow-toolbar__icon img {
+  width: 18px;
+  height: auto;
+}
+
+.flow-canvas {
+  flex: 1 1 auto;
+  min-height: 520px;
+  background: radial-gradient(circle at 20% 20%, rgba(107, 91, 255, 0.08), transparent 55%),
+    radial-gradient(circle at 70% 0%, rgba(54, 197, 240, 0.06), transparent 60%),
+    #eef1f9;
+  border-radius: 28px;
+  border: 1px solid #dee4f5;
+  overflow: hidden;
+}
+
+.flow-minimap {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  border: 1px solid #d4d8eb;
+  box-shadow: 0 12px 25px -18px rgba(15, 23, 42, 0.3);
+}
