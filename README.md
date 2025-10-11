@@ -1,82 +1,35 @@
 # Jarvio Automation Journey
 
-This project contains a React + TypeScript workspace that renders the Jarvio automation flow on top of React Flow. Use the toolbar to add Amazon, AI Agent, Gmail, and Slack blocks, configure each step in the side panel, and play through the left-to-right run state animation.
-
-## Prerequisites
-
-- [Node.js](https://nodejs.org/) 18+
-- npm 9+ (ships with Node.js)
+This project provides an interactive automation journey canvas that can be opened directly in a browser without installing dependencies. It renders draggable blocks for Amazon, AI Agent, Gmail, and Slack, allows you to configure each step, and animates a left-to-right test run so you can preview how data moves through the workflow.
 
 ## Getting started
 
-1. Install dependencies:
+1. Clone or download this repository.
+2. Open `index.html` in any modern browser (Chrome, Edge, Firefox, or Safari).
 
-   ```bash
-   npm install
-   ```
+That is all you need — the page loads React, React DOM, and React Flow from public CDNs at runtime. If you prefer to serve the files locally, run a simple static server:
 
-2. Launch the Vite development server:
-
-   ```bash
-   npm run dev -- --open
-   ```
-
-   The app is served on `http://localhost:5173` by default and the command opens it in your browser.
-
-3. Build for production:
-
-   ```bash
-   npm run build
-   ```
-
-4. Preview the production bundle locally:
-
-   ```bash
-   npm run preview
-   ```
-
-## Project structure
-
+```bash
+python3 -m http.server 4173
 ```
-├── public/                # Static assets served as-is
-│   ├── ai-agent.svg
-│   ├── amazon.svg
-│   ├── favicon.svg
-│   ├── gmail.svg
-│   └── slack.svg
-├── src/
-│   ├── App.tsx            # Composition of the canvas and configuration panel
-│   ├── components/
-│   │   ├── BlockConfigPanel.tsx
-│   │   └── FlowCanvas.tsx
-│   ├── hooks/
-│   │   └── useTestRun.ts  # Run state controller
-│   ├── assets/            # In-app SVG imports
-│   ├── styles.css         # Global styling for the UI
-│   ├── types.ts
-│   └── main.tsx           # React entry point
-├── index.html             # Vite entry point
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
-```
+
+Then visit [http://localhost:4173](http://localhost:4173) in your browser.
 
 ## Features
 
-- **Interactive canvas** – Drag nodes, reorder them, and connect them automatically in sequence.
-- **Block library** – Add new Amazon, AI Agent, Gmail, or Slack steps with matching iconography.
-- **Configuration side panel** – Update dropdowns and text fields for the selected block and see the node refresh instantly.
-- **Run state animation** – Trigger an orchestrated left-to-right walkthrough that displays idle, running, and success states.
-- **Responsive layout** – Works across desktop and tablet breakpoints with accessible focus states and ARIA-friendly markup.
+- **Drag-and-drop canvas** – React Flow powers a polished board where you can reposition cards, add new ones from the toolbar, and remove any step you no longer need.
+- **Contextual configuration** – Selecting a block reveals a side panel with tailored dropdowns and inputs for Amazon datasets, AI Agent prompts, Gmail messages, and Slack alerts.
+- **Guided run preview** – Trigger a demo run to watch each card progress through idle, running, and success states in sequence, mirroring the automation journey.
+- **Instant updates** – Node labels and summaries reflect your configuration in real time, making the mock flow ideal for demos and stakeholder reviews.
 
-## Linting and quality
+## Project structure
 
-Run ESLint to keep the codebase tidy:
+The app is implemented as a lightweight, browser-ready React experience:
 
-```bash
-npm run lint
-```
+- `index.html` bootstraps fonts, styles, and the module scripts.
+- `app.js` wires application state, node lifecycle, and the configuration panel.
+- `flow-canvas.js`, `block-config-panel.js`, and `use-test-run.js` break the UI into focused modules.
+- `styles.css` contains the UI theme so the interface matches the Jarvio brand reference.
+- `assets/` houses the SVG logos for each integration block.
 
-## License
-
-This project is provided for assessment purposes and does not carry a specific license.
+Because everything runs client-side, you can host these files on any static site provider (GitHub Pages, Netlify Drop, S3, etc.) or bundle them with other documentation without additional tooling.

@@ -1,27 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { BlockNode, BlockStatus } from '../types';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'https://esm.sh/react@18?bundle';
 
-interface UseTestRunResult {
-  statusMap: Record<string, BlockStatus>;
-  isRunning: boolean;
-  run: () => void;
-  reset: () => void;
-}
-
-const STATUS_SEQUENCE: BlockStatus[] = ['idle', 'running', 'success'];
-
-export const STATUS_LABELS: Record<BlockStatus, string> = {
+export const STATUS_LABELS = {
   idle: 'Idle',
   running: 'Running',
   success: 'Success',
 };
 
+const STATUS_SEQUENCE = ['idle', 'running', 'success'];
 const STEP_DURATION = 800;
 
-export function useTestRun(nodes: BlockNode[]): UseTestRunResult {
-  const [statusMap, setStatusMap] = useState<Record<string, BlockStatus>>({});
+export function useTestRun(nodes) {
+  const [statusMap, setStatusMap] = useState({});
   const [isRunning, setIsRunning] = useState(false);
-  const timersRef = useRef<number[]>([]);
+  const timersRef = useRef([]);
 
   const sortedNodes = useMemo(
     () => [...nodes].sort((a, b) => a.position.x - b.position.x),
@@ -47,7 +38,7 @@ export function useTestRun(nodes: BlockNode[]): UseTestRunResult {
     clearTimers();
     setIsRunning(true);
 
-    const initialStatus = sortedNodes.reduce<Record<string, BlockStatus>>((acc, node) => {
+    const initialStatus = sortedNodes.reduce((acc, node) => {
       acc[node.id] = 'idle';
       return acc;
     }, {});
@@ -75,7 +66,7 @@ export function useTestRun(nodes: BlockNode[]): UseTestRunResult {
 
   useEffect(() => {
     setStatusMap((prev) => {
-      const next: Record<string, BlockStatus> = {};
+      const next = {};
       sortedNodes.forEach((node) => {
         if (prev[node.id]) {
           next[node.id] = prev[node.id];
