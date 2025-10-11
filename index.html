@@ -1,13 +1,977 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jarvio Flow Builder</title>
+    <title>Jarvio Automation Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/reactflow@11.11.2/dist/style.css" />
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        line-height: 1.5;
+        font-weight: 400;
+        color: #0d1321;
+        background-color: #f6f7fb;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, rgba(107, 91, 255, 0.08), rgba(54, 197, 240, 0.04));
+        color: #0d1321;
+      }
+
+      #root {
+        min-height: 100vh;
+      }
+
+      .app-shell {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      @media (max-width: 1180px) {
+        .app-shell {
+          flex-direction: column;
+        }
+
+        .config-panel {
+          width: 100%;
+          border-left: none;
+          border-top: 1px solid #e1e6f2;
+          box-shadow: none;
+        }
+      }
+
+      .flow-shell {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 32px 36px;
+      }
+
+      .flow-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        padding: 24px 28px;
+        border: 1px solid #e1e6f2;
+      }
+
+      .flow-toolbar__group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .flow-toolbar__title {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: #0d1321;
+      }
+
+      .flow-toolbar__subtitle {
+        margin: 0;
+        color: #596891;
+      }
+
+      .flow-toolbar__controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .flow-toolbar__button {
+        border: 1px solid #d4d9eb;
+        background: #f8f9ff;
+        color: #1d2746;
+        border-radius: 14px;
+        padding: 10px 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .flow-toolbar__button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .flow-toolbar__button:hover:not(:disabled) {
+        background: #eef1ff;
+        border-color: #c2c8ef;
+      }
+
+      .flow-toolbar__button--primary {
+        background: linear-gradient(135deg, #6b5bff, #8c79ff);
+        color: #ffffff;
+        border: none;
+        box-shadow: 0 14px 30px -18px rgba(107, 91, 255, 0.9);
+      }
+
+      .flow-toolbar__button--primary:hover {
+        background: linear-gradient(135deg, #5e4cf3, #7865ff);
+      }
+
+      .flow-toolbar__icon {
+        display: inline-flex;
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        background: #ffffff;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 0 1px rgba(13, 19, 33, 0.05);
+      }
+
+      .flow-toolbar__icon img {
+        width: 18px;
+        height: auto;
+      }
+
+      .flow-canvas {
+        flex: 1 1 auto;
+        min-height: 520px;
+        background: radial-gradient(circle at 20% 20%, rgba(107, 91, 255, 0.08), transparent 55%),
+          radial-gradient(circle at 70% 0%, rgba(54, 197, 240, 0.06), transparent 60%),
+          #eef1f9;
+        border-radius: 28px;
+        border: 1px solid #dee4f5;
+        overflow: hidden;
+      }
+
+      .flow-minimap {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        border: 1px solid #d4d8eb;
+        box-shadow: 0 12px 25px -18px rgba(15, 23, 42, 0.3);
+      }
+
+      .config-panel {
+        width: 360px;
+        background: #ffffff;
+        border-left: 1px solid #e1e6f2;
+        padding: 32px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        box-shadow: -24px 0 60px -48px rgba(15, 23, 42, 0.3);
+      }
+
+      .config-panel__header {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .config-panel__eyebrow {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #6b5bff;
+        margin: 0 0 6px;
+      }
+
+      .config-panel__description {
+        margin: 8px 0 0;
+        color: #5f6c94;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .config-panel__close {
+        margin-left: auto;
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        border: none;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        color: #445175;
+        background: #f2f4ff;
+      }
+
+      .config-panel__content {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .config-panel__form {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .config-panel__field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 14px;
+        color: #374161;
+      }
+
+      .config-panel__field span {
+        font-weight: 600;
+        color: #0d1321;
+      }
+
+      .config-panel__field input,
+      .config-panel__field select,
+      .config-panel__field textarea {
+        border: 1px solid #d7ddf0;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-size: 14px;
+        font-family: inherit;
+        background: #f8f9ff;
+        color: #1d2746;
+      }
+
+      .config-panel__field textarea {
+        resize: vertical;
+      }
+
+      .config-panel__output {
+        font-size: 12px;
+        color: #4f5b7b;
+      }
+
+      .config-panel__empty {
+        margin: auto;
+        text-align: center;
+        color: #4f5b7b;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .config-panel__empty h2 {
+        margin: 0;
+      }
+
+      .block-node {
+        width: 260px;
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid #e4e7f1;
+        box-shadow: 0 20px 35px -25px rgba(13, 19, 33, 0.4);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+
+      .block-node--selected {
+        border-color: #6b5bff;
+        box-shadow: 0 24px 45px -30px rgba(107, 91, 255, 0.6);
+      }
+
+      .block-node__handle {
+        width: 12px;
+        height: 12px;
+        background: #6b5bff;
+        border: 2px solid #ffffff;
+      }
+
+      .block-node__header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .block-node__badge {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+      }
+
+      .block-node__badge img {
+        width: 100%;
+        height: auto;
+      }
+
+      .block-node__heading h2 {
+        font-size: 16px;
+        margin: 0;
+        color: #0d1321;
+      }
+
+      .block-node__heading p {
+        margin: 2px 0 0;
+        font-size: 12px;
+        color: #5f6c94;
+      }
+
+      .block-node__status {
+        margin-left: auto;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: #f0f2fb;
+        color: #4f5b7b;
+      }
+
+      .block-node__status--running {
+        background: #e2e8ff;
+        color: #3b45a4;
+      }
+
+      .block-node__status--success {
+        background: #ddf7e4;
+        color: #257a47;
+      }
+
+      .block-node__config {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+      }
+
+      .block-node__config-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4px;
+        background: #f7f8ff;
+        border-radius: 14px;
+        padding: 10px 12px;
+      }
+
+      .block-node__config-row dt {
+        font-size: 12px;
+        color: #7b86a8;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .block-node__config-row dd {
+        margin: 0;
+        font-size: 14px;
+        color: #1d2746;
+        font-weight: 600;
+      }
+
+      .block-node__footer {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .block-node__delete {
+        background: none;
+        border: none;
+        color: #b4232b;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        padding: 4px 0;
+      }
+
+      .block-node__delete:hover {
+        text-decoration: underline;
+      }
+
+      .rf-controls button {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        border: 1px solid #d5daf1;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/reactflow@11.11.2/dist/reactflow.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone@7.23.9/babel.min.js"></script>
+    <script type="text/babel" data-presets="env,react">
+      const { useState, useMemo, useCallback, useEffect, useRef } = React;
+      const {
+        ReactFlow: ReactFlowComponent,
+        ReactFlowProvider,
+        MiniMap,
+        Controls,
+        Background,
+        Handle,
+        Position,
+        applyNodeChanges,
+      } = ReactFlow;
+
+      const STATUS_LABELS = {
+        idle: 'Idle',
+        running: 'Running',
+        success: 'Success',
+      };
+
+      const BLOCK_LIBRARY = {
+        amazon: {
+          type: 'amazon',
+          title: 'Amazon Dataset',
+          description: 'Gather marketplace insights and catalog details.',
+          accent: '#ff9900',
+          icon: './public/amazon.svg',
+          defaultConfig: {
+            dataset: 'Customer Reviews',
+            marketplace: 'United States',
+            notes: 'Summarize key sentiment before passing to the agent.',
+          },
+        },
+        aiAgent: {
+          type: 'aiAgent',
+          title: 'AI Agent',
+          description: 'Orchestrate reasoning and planning with Jarvio AI.',
+          accent: '#6b5bff',
+          icon: './public/ai-agent.svg',
+          defaultConfig: {
+            model: 'gpt-4o-mini',
+            temperature: '0.4',
+            prompt: 'Craft a concise executive summary using the Amazon context.',
+          },
+        },
+        gmail: {
+          type: 'gmail',
+          title: 'Gmail',
+          description: 'Send polished updates directly to your stakeholders.',
+          accent: '#ea4335',
+          icon: './public/gmail.svg',
+          defaultConfig: {
+            recipients: 'team@jarvio.ai',
+            subject: 'Weekly marketplace pulse',
+            body: 'Hi team,\nHere is what we are seeing this week...',
+          },
+        },
+        slack: {
+          type: 'slack',
+          title: 'Slack',
+          description: 'Trigger real-time alerts in the right channel.',
+          accent: '#36c5f0',
+          icon: './public/slack.svg',
+          defaultConfig: {
+            channel: '#marketplace-pulse',
+            mention: '@here',
+            message: 'Fresh insights from Amazon are ready to review.',
+          },
+        },
+      };
+
+      const createClassName = (...parts) => parts.filter(Boolean).join(' ');
+
+      let nodeIdCounter = 0;
+      const createBlockNode = (type, index = 0) => {
+        const template = BLOCK_LIBRARY[type];
+        return {
+          id: `${type}-${nodeIdCounter++}`,
+          type: 'block',
+          position: { x: 140 + index * 280, y: 160 },
+          data: {
+            blockType: type,
+            title: template.title,
+            description: template.description,
+            config: { ...template.defaultConfig },
+          },
+        };
+      };
+
+      const createEdgesFromNodes = (nodes) => {
+        const sorted = [...nodes].sort((a, b) => a.position.x - b.position.x);
+        return sorted.slice(0, -1).map((node, index) => ({
+          id: `edge-${node.id}-${sorted[index + 1].id}`,
+          source: node.id,
+          target: sorted[index + 1].id,
+        }));
+      };
+
+      const useTestRun = (nodes) => {
+        const [statusMap, setStatusMap] = useState({});
+        const [isRunning, setIsRunning] = useState(false);
+        const timersRef = useRef([]);
+
+        const clearTimers = useCallback(() => {
+          timersRef.current.forEach((timer) => clearTimeout(timer));
+          timersRef.current = [];
+        }, []);
+
+        useEffect(() => {
+          return () => clearTimers();
+        }, [clearTimers]);
+
+        useEffect(() => {
+          setStatusMap((prev) => {
+            const next = {};
+            nodes.forEach((node) => {
+              next[node.id] = prev[node.id] ?? 'idle';
+            });
+            return next;
+          });
+        }, [nodes]);
+
+        const reset = useCallback(() => {
+          clearTimers();
+          setIsRunning(false);
+          setStatusMap((prev) => {
+            const next = {};
+            nodes.forEach((node) => {
+              next[node.id] = 'idle';
+            });
+            return next;
+          });
+        }, [clearTimers, nodes]);
+
+        const start = useCallback(() => {
+          if (!nodes.length) {
+            return;
+          }
+
+          clearTimers();
+          const ordered = [...nodes].sort((a, b) => a.position.x - b.position.x);
+          setIsRunning(true);
+          const initialStatuses = ordered.reduce((acc, node) => {
+            acc[node.id] = 'idle';
+            return acc;
+          }, {});
+          setStatusMap(initialStatuses);
+
+          ordered.forEach((node, index) => {
+            const startTimer = setTimeout(() => {
+              setStatusMap((prev) => ({ ...prev, [node.id]: 'running' }));
+            }, index * 1100);
+
+            const endTimer = setTimeout(() => {
+              setStatusMap((prev) => ({ ...prev, [node.id]: 'success' }));
+              if (index === ordered.length - 1) {
+                setIsRunning(false);
+              }
+            }, index * 1100 + 800);
+
+            timersRef.current.push(startTimer, endTimer);
+          });
+        }, [clearTimers, nodes]);
+
+        return { statusMap, isRunning, start, reset };
+      };
+
+      const BlockNode = React.memo(({ id, data }) => {
+        const block = BLOCK_LIBRARY[data.blockType];
+        const status = data.status || 'idle';
+        return (
+          <article
+            className={createClassName(
+              'block-node',
+              `block-node--${status}`,
+              data.isSelected && 'block-node--selected'
+            )}
+            tabIndex={0}
+            aria-label={`${block.title} block, status ${STATUS_LABELS[status]}`}
+          >
+            <Handle type="target" position={Position.Left} className="block-node__handle" />
+            <Handle type="source" position={Position.Right} className="block-node__handle" />
+            <header className="block-node__header">
+              <span className="block-node__badge" style={{ backgroundColor: block.accent }}>
+                <img src={block.icon} alt="" />
+              </span>
+              <div className="block-node__heading">
+                <h2>{block.title}</h2>
+                <p>{data.description}</p>
+              </div>
+              <span className={createClassName('block-node__status', `block-node__status--${status}`)}>
+                {STATUS_LABELS[status]}
+              </span>
+            </header>
+            <dl className="block-node__config">
+              {Object.entries(data.config).map(([key, value]) => (
+                <div key={key} className="block-node__config-row">
+                  <dt>{key}</dt>
+                  <dd>{String(value)}</dd>
+                </div>
+              ))}
+            </dl>
+            <footer className="block-node__footer">
+              <button
+                type="button"
+                className="block-node__delete"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  data.onDelete && data.onDelete(id);
+                }}
+              >
+                Remove
+              </button>
+            </footer>
+          </article>
+        );
+      });
+
+      const FlowCanvas = ({
+        nodes,
+        edges,
+        onNodesChange,
+        onNodeDragStop,
+        onSelectNode,
+        onDeselect,
+        onCreateNode,
+        onRun,
+        isRunning,
+      }) => (
+        <section className="flow-shell">
+          <header className="flow-toolbar" aria-label="Flow actions">
+            <div className="flow-toolbar__group">
+              <h1 className="flow-toolbar__title">Automation Journey</h1>
+              <p className="flow-toolbar__subtitle">
+                Drag to reorder and stitch together your Amazon insights pipeline.
+              </p>
+            </div>
+            <div className="flow-toolbar__controls">
+              {Object.values(BLOCK_LIBRARY).map((block) => (
+                <button
+                  key={block.type}
+                  type="button"
+                  className="flow-toolbar__button"
+                  onClick={() => onCreateNode(block.type)}
+                >
+                  <span className="flow-toolbar__icon" aria-hidden="true">
+                    <img src={block.icon} alt="" />
+                  </span>
+                  Add {block.title}
+                </button>
+              ))}
+              <button
+                type="button"
+                className={createClassName('flow-toolbar__button', 'flow-toolbar__button--primary')}
+                onClick={onRun}
+                disabled={isRunning || nodes.length === 0}
+              >
+                {isRunning ? 'Running…' : 'Test Run'}
+              </button>
+            </div>
+          </header>
+          <div className="flow-canvas" role="application">
+            <ReactFlowComponent
+              nodes={nodes}
+              edges={edges}
+              nodeTypes={{ block: BlockNode }}
+              onNodesChange={onNodesChange}
+              onNodeDragStop={onNodeDragStop}
+              onNodeClick={(_, node) => onSelectNode(node.id)}
+              onPaneClick={onDeselect}
+              fitView
+              fitViewOptions={{ padding: 0.2 }}
+              minZoom={0.5}
+              maxZoom={1.5}
+              panOnScroll
+              panOnDrag
+            >
+              <MiniMap pannable zoomable className="flow-minimap" />
+              <Controls showInteractive={false} />
+              <Background gap={24} color="#dce1ef" />
+            </ReactFlowComponent>
+          </div>
+        </section>
+      );
+
+      const BlockConfigPanel = ({ node, onClose, onConfigChange }) => {
+        if (!node) {
+          return (
+            <aside className="config-panel">
+              <div className="config-panel__empty">
+                <h2>No block selected</h2>
+                <p>Tap any block on the canvas to configure its behaviour.</p>
+              </div>
+            </aside>
+          );
+        }
+
+        const block = BLOCK_LIBRARY[node.data.blockType];
+        const config = node.data.config;
+
+        const handleChange = (event) => {
+          const { name, value } = event.target;
+          onConfigChange(node.id, { [name]: value });
+        };
+
+        return (
+          <aside className="config-panel" aria-labelledby="config-heading">
+            <header className="config-panel__header">
+              <div>
+                <p className="config-panel__eyebrow">Settings</p>
+                <h2 id="config-heading">{block.title}</h2>
+                <p className="config-panel__description">{block.description}</p>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="config-panel__close"
+                aria-label="Close configuration"
+              >
+                ×
+              </button>
+            </header>
+
+            <div className="config-panel__content">
+              {node.data.blockType === 'amazon' && (
+                <form className="config-panel__form" aria-label="Amazon configuration">
+                  <label className="config-panel__field">
+                    <span>Dataset</span>
+                    <select name="dataset" value={config.dataset} onChange={handleChange}>
+                      <option value="Customer Reviews">Customer Reviews</option>
+                      <option value="Inventory Health">Inventory Health</option>
+                      <option value="Pricing Trends">Pricing Trends</option>
+                    </select>
+                  </label>
+                  <label className="config-panel__field">
+                    <span>Marketplace</span>
+                    <select name="marketplace" value={config.marketplace} onChange={handleChange}>
+                      <option value="United States">United States</option>
+                      <option value="Canada">Canada</option>
+                      <option value="European Union">European Union</option>
+                      <option value="Asia Pacific">Asia Pacific</option>
+                    </select>
+                  </label>
+                  <label className="config-panel__field">
+                    <span>Notes</span>
+                    <textarea name="notes" rows={4} value={config.notes} onChange={handleChange} />
+                  </label>
+                </form>
+              )}
+
+              {node.data.blockType === 'aiAgent' && (
+                <form className="config-panel__form" aria-label="AI agent configuration">
+                  <label className="config-panel__field">
+                    <span>Model</span>
+                    <select name="model" value={config.model} onChange={handleChange}>
+                      <option value="gpt-4o-mini">GPT-4o mini</option>
+                      <option value="sonnet-3.5">Claude 3.5 Sonnet</option>
+                      <option value="jarvio-orchestrator">Jarvio Orchestrator</option>
+                    </select>
+                  </label>
+                  <label className="config-panel__field">
+                    <span>Temperature</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      name="temperature"
+                      value={Number(config.temperature)}
+                      onChange={handleChange}
+                    />
+                    <output className="config-panel__output">
+                      {Number(config.temperature).toFixed(1)}
+                    </output>
+                  </label>
+                  <label className="config-panel__field">
+                    <span>Prompt</span>
+                    <textarea name="prompt" rows={5} value={config.prompt} onChange={handleChange} />
+                  </label>
+                </form>
+              )}
+
+              {node.data.blockType === 'gmail' && (
+                <form className="config-panel__form" aria-label="Gmail configuration">
+                  <label className="config-panel__field">
+                    <span>Recipients</span>
+                    <input
+                      type="text"
+                      name="recipients"
+                      placeholder="you@example.com"
+                      value={config.recipients}
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <label className="config-panel__field">
+                    <span>Subject</span>
+                    <input type="text" name="subject" value={config.subject} onChange={handleChange} />
+                  </label>
+                  <label className="config-panel__field">
+                    <span>Email body</span>
+                    <textarea name="body" rows={6} value={config.body} onChange={handleChange} />
+                  </label>
+                </form>
+              )}
+
+              {node.data.blockType === 'slack' && (
+                <form className="config-panel__form" aria-label="Slack configuration">
+                  <label className="config-panel__field">
+                    <span>Channel</span>
+                    <select name="channel" value={config.channel} onChange={handleChange}>
+                      <option value="#marketplace-pulse">#marketplace-pulse</option>
+                      <option value="#growth">#growth</option>
+                      <option value="#alerts">#alerts</option>
+                    </select>
+                  </label>
+                  <label className="config-panel__field">
+                    <span>Mention</span>
+                    <input type="text" name="mention" value={config.mention} onChange={handleChange} />
+                  </label>
+                  <label className="config-panel__field">
+                    <span>Message</span>
+                    <textarea name="message" rows={5} value={config.message} onChange={handleChange} />
+                  </label>
+                </form>
+              )}
+            </div>
+          </aside>
+        );
+      };
+
+      const App = () => {
+        const [nodes, setNodes] = useState(() => [
+          createBlockNode('amazon', 0),
+          createBlockNode('aiAgent', 1),
+          createBlockNode('gmail', 2),
+          createBlockNode('slack', 3),
+        ]);
+        const [selectedNodeId, setSelectedNodeId] = useState(null);
+        const { statusMap, isRunning, start, reset } = useTestRun(nodes);
+
+        const edges = useMemo(() => createEdgesFromNodes(nodes), [nodes]);
+
+        const handleNodesChange = useCallback((changes) => {
+          setNodes((prev) => applyNodeChanges(changes, prev));
+        }, []);
+
+        const handleNodeDragStop = useCallback(() => {
+          setNodes((prev) => {
+            const sorted = [...prev].sort((a, b) => a.position.x - b.position.x);
+            return sorted.map((node, index) => ({
+              ...node,
+              position: { x: 140 + index * 280, y: 160 },
+            }));
+          });
+        }, []);
+
+        const handleSelectNode = useCallback((nodeId) => {
+          setSelectedNodeId(nodeId);
+        }, []);
+
+        const handleDeselect = useCallback(() => setSelectedNodeId(null), []);
+
+        const handleCreateNode = useCallback((type) => {
+          setNodes((prev) => {
+            const next = [...prev, createBlockNode(type, prev.length)];
+            return next.map((node, index) => ({
+              ...node,
+              position: { x: 140 + index * 280, y: 160 },
+            }));
+          });
+        }, []);
+
+        const handleDeleteNode = useCallback((nodeId) => {
+          setNodes((prev) => {
+            const filtered = prev.filter((node) => node.id !== nodeId);
+            return filtered.map((node, index) => ({
+              ...node,
+              position: { x: 140 + index * 280, y: 160 },
+            }));
+          });
+          setSelectedNodeId((current) => (current === nodeId ? null : current));
+        }, []);
+
+        const handleConfigChange = useCallback((nodeId, updates) => {
+          setNodes((prev) =>
+            prev.map((node) =>
+              node.id === nodeId
+                ? {
+                    ...node,
+                    data: {
+                      ...node.data,
+                      config: { ...node.data.config, ...updates },
+                    },
+                  }
+                : node
+            )
+          );
+        }, []);
+
+        const handleRun = useCallback(() => {
+          setSelectedNodeId(null);
+          start();
+        }, [start]);
+
+        useEffect(() => {
+          if (!nodes.length) {
+            reset();
+          }
+        }, [nodes.length, reset]);
+
+        const decoratedNodes = useMemo(
+          () =>
+            nodes.map((node) => ({
+              ...node,
+              data: {
+                ...node.data,
+                status: statusMap[node.id] ?? 'idle',
+                isSelected: node.id === selectedNodeId,
+                onDelete: handleDeleteNode,
+              },
+            })),
+          [nodes, statusMap, selectedNodeId, handleDeleteNode]
+        );
+
+        const selectedNode = useMemo(
+          () => nodes.find((node) => node.id === selectedNodeId) || null,
+          [nodes, selectedNodeId]
+        );
+
+        return (
+          <main className="app-shell">
+            <FlowCanvas
+              nodes={decoratedNodes}
+              edges={edges}
+              onNodesChange={handleNodesChange}
+              onNodeDragStop={handleNodeDragStop}
+              onSelectNode={handleSelectNode}
+              onDeselect={handleDeselect}
+              onCreateNode={handleCreateNode}
+              onRun={handleRun}
+              isRunning={isRunning}
+            />
+            <BlockConfigPanel
+              node={selectedNode}
+              onClose={handleDeselect}
+              onConfigChange={handleConfigChange}
+            />
+          </main>
+        );
+      };
+
+      const Root = () => (
+        <ReactFlowProvider>
+          <App />
+        </ReactFlowProvider>
+      );
+
+      const container = document.getElementById('root');
+      const root = ReactDOM.createRoot(container);
+      root.render(<Root />);
+    </script>
   </body>
 </html>

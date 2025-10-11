@@ -1,51 +1,31 @@
-# Jarvio Flow Builder
+# Jarvio Automation Journey
 
-A React + Vite playground for experimenting with Jarvio-style automation flows. Drag nodes around the canvas, tweak their configuration, and trigger a guided "test run" animation to watch each block execute from left to right.
+This repository hosts a static ReactFlow playground that showcases the Jarvio automation journey. Open the page in any modern browser to drag Amazon, AI Agent, Gmail, and Slack blocks, tweak their configuration, and run a guided animation that highlights each step left-to-right.
 
-## Getting started
+## Quick start
 
-### Prerequisites
+1. Clone or download this repository.
+2. Ensure the `public/` directory stays adjacent to `index.html` (the page loads its icons from there).
+3. Open `index.html` in your preferred browser.
 
-- [Node.js](https://nodejs.org/) 18 or newer (which bundles npm)
+No build tools or package managers are required—the page pulls React, ReactDOM, and ReactFlow directly from CDN bundles and uses Babel Standalone to interpret the JSX at runtime.
 
-### Installation
+## Project layout
 
-```bash
-npm install
-```
+- `index.html` – Self-contained UI with inline styles and the automation logic.
+- `public/` – Brand assets for each block type.
 
-### Running the development server
+## Features
 
-```bash
-npm run dev
-```
+- **Drag-and-drop canvas** powered by ReactFlow with custom block cards and a minimap.
+- **Dynamic library** buttons that let you add additional Amazon, AI Agent, Gmail, or Slack steps.
+- **Inline configuration panel** that adapts its fields to the selected block.
+- **Test run sequencer** that animates idle, running, and success states from left to right.
+- **Accessible styling** including descriptive ARIA labels, focusable blocks, and high-contrast colour choices.
 
-The app will be available at the URL printed in the terminal (typically `http://localhost:5173`).
+## Browser support
 
-### Linting
-
-```bash
-npm run lint
-```
-
-### Production build
-
-```bash
-npm run build
-```
-
-## Project structure
-
-- `src/components/FlowCanvas.tsx` – React Flow canvas with creation, deletion, and animation controls.
-- `src/components/BlockConfigPanel.tsx` – Contextual form that updates the selected block configuration.
-- `src/hooks/useTestRun.ts` – Run-state controller that steps through nodes and updates visual statuses.
-- `src/components/nodes/BlockNode.tsx` – Custom node renderer with status badges and summaries.
-- `public/*.svg` – Brand-inspired icons used throughout the UI.
-
-## Accessibility & design notes
-
-- Keyboard focus and ARIA labels are provided for the interactive flow canvas and settings panel.
-- The colour palette was tuned for clarity and contrast, striving to pass the “grandmother test”.
+The experience has been tested with Chromium-based browsers and Safari using ECMAScript modules. If you need to run in older browsers, bundle the page with your preferred toolchain.
 
 ## License
 
