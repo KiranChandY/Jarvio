@@ -1,31 +1,81 @@
 # Jarvio Automation Journey
 
-This repository hosts a static ReactFlow playground that showcases the Jarvio automation journey. Open the page in any modern browser to drag Amazon, AI Agent, Gmail, and Slack blocks, tweak their configuration, and run a guided animation that highlights each step left-to-right.
+This project contains a React + TypeScript workspace that renders the Jarvio automation flow on top of React Flow. Use the toolbar to add Amazon, AI Agent, Gmail, and Slack blocks, configure each step in the side panel, and play through the left-to-right run state animation.
 
-## Quick start
+## Prerequisites
 
-1. Clone or download this repository.
-2. Ensure the `public/` directory stays adjacent to `index.html` (the page loads its icons from there).
-3. Open `index.html` in your preferred browser.
+- [Node.js](https://nodejs.org/) 18+
+- npm 9+ (ships with Node.js)
 
-No build tools or package managers are required—the page pulls React, ReactDOM, and ReactFlow directly from CDN bundles and uses Babel Standalone to interpret the JSX at runtime.
+## Getting started
 
-## Project layout
+1. Install dependencies:
 
-- `index.html` – Self-contained UI with inline styles and the automation logic.
-- `public/` – Brand assets for each block type.
+   ```bash
+   npm install
+   ```
+
+2. Launch the Vite development server:
+
+   ```bash
+   npm run dev -- --open
+   ```
+
+   The app is served on `http://localhost:5173` by default and the command opens it in your browser.
+
+3. Build for production:
+
+   ```bash
+   npm run build
+   ```
+
+4. Preview the production bundle locally:
+
+   ```bash
+   npm run preview
+   ```
+
+## Project structure
+
+```
+├── public/                # Static assets served as-is
+│   ├── ai-agent.svg
+│   ├── amazon.svg
+│   ├── favicon.svg
+│   ├── gmail.svg
+│   └── slack.svg
+├── src/
+│   ├── App.tsx            # Composition of the canvas and configuration panel
+│   ├── components/
+│   │   ├── BlockConfigPanel.tsx
+│   │   └── FlowCanvas.tsx
+│   ├── hooks/
+│   │   └── useTestRun.ts  # Run state controller
+│   ├── assets/            # In-app SVG imports
+│   ├── styles.css         # Global styling for the UI
+│   ├── types.ts
+│   └── main.tsx           # React entry point
+├── index.html             # Vite entry point
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
 
 ## Features
 
-- **Drag-and-drop canvas** powered by ReactFlow with custom block cards and a minimap.
-- **Dynamic library** buttons that let you add additional Amazon, AI Agent, Gmail, or Slack steps.
-- **Inline configuration panel** that adapts its fields to the selected block.
-- **Test run sequencer** that animates idle, running, and success states from left to right.
-- **Accessible styling** including descriptive ARIA labels, focusable blocks, and high-contrast colour choices.
+- **Interactive canvas** – Drag nodes, reorder them, and connect them automatically in sequence.
+- **Block library** – Add new Amazon, AI Agent, Gmail, or Slack steps with matching iconography.
+- **Configuration side panel** – Update dropdowns and text fields for the selected block and see the node refresh instantly.
+- **Run state animation** – Trigger an orchestrated left-to-right walkthrough that displays idle, running, and success states.
+- **Responsive layout** – Works across desktop and tablet breakpoints with accessible focus states and ARIA-friendly markup.
 
-## Browser support
+## Linting and quality
 
-The experience has been tested with Chromium-based browsers and Safari using ECMAScript modules. If you need to run in older browsers, bundle the page with your preferred toolchain.
+Run ESLint to keep the codebase tidy:
+
+```bash
+npm run lint
+```
 
 ## License
 
