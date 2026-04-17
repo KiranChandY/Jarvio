@@ -1,0 +1,22 @@
+node_modules
+.expo
+.expo-shared
+dist
+web-build
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# native folders
+/android
+/ios
